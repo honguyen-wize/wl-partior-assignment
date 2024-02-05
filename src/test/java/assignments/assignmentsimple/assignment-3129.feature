@@ -14,9 +14,10 @@ Background:
   * def generatedMsgId = 'msgid-' + uuid.substring(0, 10)
   * def generatedRef = 'ref-' + uuid.substring(0, 10)
   * def participantOnPlatformAccountId = 'acc-' + uuid.substring(0, 6)
-  * def generatedDateTime = java.time.format.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss.SSS').format(java.time.LocalDateTime.now())
-  * def currentDate = java.time.format.DateTimeFormatter.ofPattern('yyyy-MM-dd').format(java.time.LocalDateTime.now())
-  # * def settlementDate = "ACSC"
+  * def currentDateTime = java.time.format.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss.SSS').format(java.time.LocalDateTime.now())
+  * def currentDatePart = java.time.format.DateTimeFormatter.ofPattern('yyyy-MM-dd').format(java.time.LocalDateTime.now())
+  * def generatedDateTime = currentDateTime
+  * def settlementDate = currentDateTime
   # * def statusDescription = "AcceptedSettlementCompletedDebitorAccount"
 
 Scenario: Participant Bank successfully deposits from their off-chain account to their On-chain account with settlement bank
@@ -52,4 +53,42 @@ Scenario: Participant Bank successfully deposits from their off-chain account to
     * match statusResponse == 'ACTC'
     * match descResponse == 'AcceptedTechnicalValidation'
     * match originalRequestMsgIdResponse == generatedMsgId
+
+    #Step 2.1 Karate sends REQUEST camp.050 to [Mock Server Settlement Bank]
+    * def blockchainDate = java.time.format.DateTimeFormatter.ofPattern('yyyy-MM-dd').format(java.time.LocalDateTime.now())
+    
+    Given path 'sendToSettlementBank'
+    And request read('classpath:assignments/requestpayload/request_camt.050.001.05.json')
+    When method post
+    Then status 200
+
+    #Karate validates the RESPONSE of camp.050
+    * def actualCreditDebit = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].CdtDbtInd
+    * def actualBookingDate = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].BookgDt
+    * def actualValueDate = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].ValueDt
+    * def actualExposureDate = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].ExposureDt
+    * def actualSettlementDate = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].StlmntDt
+    * def actualExecutionStatus = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].ExecStatus
+    * def actualPostingRefNum = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].PostingRefNum
+   
+    * def actualBookingDatePart = java.time.LocalDateTime.parse(actualBookingDate, java.time.format.DateTimeFormatter.ISO_DATE_TIME).toLocalDate().toString()
+    * def actualValueDatePart = java.time.LocalDateTime.parse(actualValueDate, java.time.format.DateTimeFormatter.ISO_DATE_TIME).toLocalDate().toString()
+    * def actualExposureDatePart = java.time.LocalDateTime.parse(actualExposureDate, java.time.format.DateTimeFormatter.ISO_DATE_TIME).toLocalDate().toString()
+    * def actualSettlementDatePart = java.time.LocalDateTime.parse(actualSettlementDate, java.time.format.DateTimeFormatter.ISO_DATE_TIME).toLocalDate().toString()
+
+    * print 'actualCreditDebit:', actualCreditDebit
+    * print 'actualBookingDatePart:', actualBookingDatePart
+    * print 'actualValueDatePart:', actualValueDatePart
+    * print 'actualExposureDatePart:', actualExposureDatePart
+    * print 'actualSettlementDatePart:', actualSettlementDatePart
+    * print 'actualExecutionStatus:', actualExecutionStatus
+    * print 'actualPostingRefNum:', actualPostingRefNum 
+
+    * match actualCreditDebit == 'CREDIT' || actualCreditDebit == 'DEBIT]'
+    * match actualBookingDatePart == currentDatePart
+    * match actualValueDatePart == currentDatePart
+    * match actualExposureDatePart == currentDatePart
+    * match actualSettlementDatePart == currentDatePart
+    * match actualExecutionStatus == 'GENERATED'
+    * match actualPostingRefNum !=  ''
 
