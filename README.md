@@ -17,3 +17,6 @@ mvn test -Dtest=AssignmentSimpleRunner
    * Run complex assignment
 ```bash
 mvn test -Dtest=AssignmentComplexRunner
+
+## Report
+Get from `target/karate-reports/karate-summary.html`

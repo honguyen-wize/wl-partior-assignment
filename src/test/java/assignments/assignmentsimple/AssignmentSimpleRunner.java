@@ -6,7 +6,8 @@ class AssignmentSimpleRunner {
     
     @Karate.Test
     Karate testUsers() {
-        return Karate.run("assignment-3129").relativeTo(getClass());
+        // return Karate.run("assignment-3129-demo").relativeTo(getClass());
+        return Karate.run("assignment-deposit").relativeTo(getClass());
     }    
 
 }
