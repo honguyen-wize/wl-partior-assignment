@@ -2,7 +2,7 @@ Feature: Participant Bank deposits from their off-chain account to their On-chai
 
 Background:  
   * call read('classpath:assignments/Utils/common.feature')
-
+  
   * url 'https://api.dev.runner.wizerace.net/mockApi/simple'
 
   * def testcasId = karate.get('testcasId')
@@ -22,7 +22,7 @@ Background:
 
 Scenario: Participant Bank successfully deposits from their off-chain account to their On-chain account with settlement bank
     
-    #Step 1.1: Karate sends deposit REQUEST camt.050 to [Mock server Partior] 
+    # Step 1.1: Send deposit REQUEST camt.050 to [Partior] 
     * def currentDateTime = getCurrentUTCDate()
     * def generatedDateTime = currentDateTime
     * def settlementDate = currentDateTime
@@ -32,20 +32,20 @@ Scenario: Participant Bank successfully deposits from their off-chain account to
     When method post
     Then status 200
 
-    # Karate validates fields in admi.007 should be validated
-    * def descResponse = response.BusMsg.Document.RctAck.Rpt.ReqHdlg.Desc
-    * def statusResponse = response.BusMsg.Document.RctAck.Rpt.ReqHdlg.StsCd
-    * def bankBICResponse = response.BusMsg.AppHdr.Fr.FIId.FinInstnId.BICFI
-    * def bankBICNodeResponse = response.BusMsg.AppHdr.To.FIId.FinInstnId.BICFI
-    * def originalRequestMsgIdResponse = response.BusMsg.Document.RctAck.Rpt.RltdRef.Ref
+    #  Step 1.2: Validates response of admi.007
+    * def actualDesc = response.BusMsg.Document.RctAck.Rpt.ReqHdlg.Desc
+    * def actualStatusCode = response.BusMsg.Document.RctAck.Rpt.ReqHdlg.StsCd
+    * def actualBankBIC = response.BusMsg.AppHdr.Fr.FIId.FinInstnId.BICFI
+    * def actualBankBICNode = response.BusMsg.AppHdr.To.FIId.FinInstnId.BICFI
+    * def actualOriginalRequestMsgId = response.BusMsg.Document.RctAck.Rpt.RltdRef.Ref
 
-    * match bankBICResponse == participantBankBIC
-    * match bankBICNodeResponse == participantBankNodeBIC
-    * match statusResponse == 'ACTC'
-    * match descResponse == 'AcceptedTechnicalValidation'
-    * match originalRequestMsgIdResponse == generatedMsgId
+    * match actualBankBIC == participantBankBIC
+    * match actualBankBICNode == participantBankNodeBIC
+    * match actualStatusCode == 'ACTC'
+    * match actualDesc == 'AcceptedTechnicalValidation'
+    * match actualOriginalRequestMsgId == generatedMsgId
 
-    #Step 2.1 Karate sends REQUEST camp.050 to [Mock Server Settlement Bank]
+    # Step 2.1: Send REQUEST camp.050 to [Settlement Bank]
     * def currentDateTime = getCurrentUTCDate()
     * def generatedDateTime = currentDateTime
     * def settlementDate = currentDateTime
@@ -56,25 +56,11 @@ Scenario: Participant Bank successfully deposits from their off-chain account to
     When method post
     Then status 200
 
-    # Karate validates the RESPONSE of camp.050
+    # Step 2.2: Validate the RESPONSE of camp.050
     * def postingEntry = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0]
-    * def actualCreditDebit = postingEntry.CdtDbtInd
-    * def actualBookingDate = getDatePart(postingEntry.BookgDt)
-    * def actualValueDate = getDatePart(postingEntry.ValueDt)
-    * def actualExposureDate = getDatePart(postingEntry.ExposureDt)
-    * def actualSettlementDate = getDatePart(postingEntry.StlmntDt)
-    * def actualExecutionStatus = postingEntry.ExecStatus
-    * def actualPostingRefNum = postingEntry.PostingRefNum
+    * validatePostingEntry(postingEntry, currentDate, 'GENERATED')
 
-    * match actualCreditDebit == 'CREDIT' || actualCreditDebit == 'DEBIT'
-    * match actualBookingDate == currentDate
-    * match actualValueDate == currentDate
-    * match actualExposureDate == currentDate
-    * match actualSettlementDate == currentDate
-    * match actualExecutionStatus == 'GENERATED'
-    * match actualPostingRefNum !=  ''
-
-    #Step 3.1 Karate sends REQUEST camt.025 with ACSC  to [Mock Server Settlement Bank Node]
+    # Step 3.1: Sends REQUEST camt.025 with ACSC to [Settlement Bank Node]
     * def currentDateTime = getCurrentUTCDate()
     * def generatedDateTime = currentDateTime
     * def settlementDate = currentDateTime
@@ -87,25 +73,11 @@ Scenario: Participant Bank successfully deposits from their off-chain account to
     When method post
     Then status 200
 
-   # Step 3.2.1 Karate validates the response json
+   # Step 3.2: Validates the response json
     * def postingEntry = response.BusMsg.Document.Rct.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0]
-    * def actualCreditDebit = postingEntry.CdtDbtInd
-    * def actualBookingDate = getDatePart(postingEntry.BookgDt)
-    * def actualValueDate = getDatePart(postingEntry.ValueDt)
-    * def actualExposureDate = getDatePart(postingEntry.ExposureDt)
-    * def actualSettlementDate = getDatePart(postingEntry.StlmntDt)
-    * def actualExecutionStatus = postingEntry.ExecStatus
-    * def actualPostingRefNum = postingEntry.PostingRefNum
+    * validatePostingEntry(postingEntry, currentDate, 'SETTLED')
 
-   * match actualCreditDebit == 'CREDIT' || actualCreditDebit == 'DEBIT'
-   * match actualBookingDate == currentDate
-   * match actualValueDate == currentDate
-   * match actualExposureDate == currentDate
-   * match actualSettlementDate == currentDate
-   * match actualExecutionStatus == 'SETTLED'
-   * match actualPostingRefNum !=  ''
-
-    #4.1 Karate sends a REQUEST  camt.025 to [Mock Server Participant Bank Node]
+    # Step 4.1: Send a REQUEST  camt.025 to [Participant Bank Node]
     * def currentDateTime = getCurrentUTCDate()
     * def generatedDateTime = currentDateTime
     * def settlementDate = currentDateTime
@@ -116,6 +88,7 @@ Scenario: Participant Bank successfully deposits from their off-chain account to
     When method post
     Then status 200
 
+    # Step 4.2: Validates the response json
     * def actualStatusCode = response.BusMsg.Document.Rct.RctDtls.ReqHdlg.StsCd
     * def actualDescription = response.BusMsg.Document.Rct.RctDtls.ReqHdlg.Desc
     * def hasSplmtryData = response.BusMsg.Document.Rct.SplmtryData

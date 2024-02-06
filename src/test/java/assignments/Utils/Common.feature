@@ -20,6 +20,34 @@ Scenario:
     } 
     """
 
+    # Function to validate Posting Entry
+    * def validatePostingEntry =
+    """
+    function(postingEntry, currentDate, expectedExecStatus) {
+        if (!(postingEntry.CdtDbtInd === 'CREDIT' || postingEntry.CdtDbtInd === 'DEBIT')) {
+            karate.fail('Assertion failed: creditDebit should be CREDIT or DEBIT');
+        }
+        if (getDatePart(postingEntry.BookgDt) !== currentDate) {
+            karate.fail('Assertion failed: bookingDate should match current date');
+        }
+        if (getDatePart(postingEntry.ValueDt) !== currentDate) {
+            karate.fail('Assertion failed: valueDate should match current date');
+        }
+        if (getDatePart(postingEntry.ExposureDt) !== currentDate) {
+            karate.fail('Assertion failed: exposureDate should match current date');
+        }
+        if (getDatePart(postingEntry.StlmntDt) !== currentDate) {
+            karate.fail('Assertion failed: settlementDate should match current date');
+        }
+        if (postingEntry.ExecStatus !== expectedExecStatus) {
+            karate.fail('Assertion failed: ExecStatus should be GENERATED');
+        }
+        if (!postingEntry.PostingRefNum) {
+            karate.fail('Assertion failed: PostingRefNum should not be empty');
+        }
+    }
+    """
+
     # * def getCurrentLocalDate =
     # """
     # function() {
