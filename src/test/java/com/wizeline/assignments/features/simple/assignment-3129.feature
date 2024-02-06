@@ -2,7 +2,7 @@
 Feature: Participant Bank deposits from their off-chain account to their On-chain account
 
 Background:
-  * call read('classpath:com/wizeline/assignments/features/helpers/common.feature')
+  * call read('classpath:com/wizeline/assignments/features/testHelpers/common.feature')
   * url simpleBaseUrl
   * def testcasId = karate.get('testcasId')
   * def settlementBankBIC = karate.get('settlementBankBIC')
