@@ -2,9 +2,7 @@ Feature: Participant Bank deposits from their off-chain account to their On-chai
 
 Background:  
   * call read('classpath:assignments/Utils/common.feature')
-  
-  * url 'https://api.dev.runner.wizerace.net/mockApi/simple'
-
+  * url simpleBaseUrl
   * def testcasId = karate.get('testcasId')
   * def settlementBankBIC = karate.get('settlementBankBIC')
   * def settlementBankNodeBIC = settlementBankBIC + "-ND"

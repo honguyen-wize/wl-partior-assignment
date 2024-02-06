@@ -47,20 +47,3 @@ Scenario:
         }
     }
     """
-
-    # * def getCurrentLocalDate =
-    # """
-    # function() {
-    #   var SimpleDateFormat = Java.type('java.text.SimpleDateFormat');
-    #   var sdf = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS');
-    #   var date = new java.util.Date();
-    #   return sdf.format(date);
-    # } 
-    # """
-
-    # * def getDateLocalPart =
-    # """
-    # function(dateString) {
-    #   return java.time.LocalDateTime.parse(dateString, java.time.format.DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss.SSS')).toLocalDate().toString()
-    # } 
-    # """

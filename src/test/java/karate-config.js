@@ -7,6 +7,7 @@ function fn() {
   var config = {
     env: env,
     myVarName: 'someValue',
+    simpleBaseUrl: 'https://api.dev.runner.wizerace.net/mockApi/simple/',
     complexBaseUrl: 'https://api.dev.runner.wizerace.net/mockApi/complex/'
   }
   if (env == 'dev') {
