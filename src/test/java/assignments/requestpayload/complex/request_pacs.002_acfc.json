@@ -1,0 +1,94 @@
+{
+   "BusMsg": {
+      "AppHdr": {
+         "MsgDefIdr": "pacs.002.001.01"
+      },
+      "Document": {
+         "FIToFIPmtStsRpt": {
+            "GrpHdr": {
+               "MsgId": "#(messageId)",
+               "CreDtTm": "2024-02-03T12:00:00Z",
+               "InstgAgt": {
+                  "FinInstnId": {
+                     "BICFI": "INSTGB2L"
+                  }
+               },
+               "InstdAgt": {
+                  "FinInstnId": {
+                     "BICFI": "COUNTERGB2L"
+                  }
+               }
+            },
+            "OrgnlGrpInfAndSts": {
+               "OrgnlMsgId": "#(originalMsgId)",
+               "OrgnlMsgNmId": "#(originalMsgDefId)",
+               "GrpSts": "ACFC",
+               "StsRsnInf": [
+                  {
+                     "Rsn": {
+                        "Cd": "ACFC",
+                        "Prtry": "Accepted, Funds Checked"
+                     },
+                     "AddtlInf": [
+                        "The payment has been accepted and funds are available."
+                     ]
+                  }
+               ]
+            },
+            "TxInfAndSts":
+            {
+               "StsId": "#(originalTransactionId)",
+               "OrgnlInstrId": "#(originalInstructionId)",
+               "OrgnlEndToEndId": "#(originalEndToEndId)",
+               "TxSts": "ACFC",
+               "StsRsnInf": [
+                  {
+                     "Rsn": {
+                        "Cd": "ACFC",
+                        "Prtry": "Accepted, Funds Checked"
+                     },
+                     "AddtlInf": [
+                        "The transaction has been accepted and funds are available."
+                     ]
+                  }
+               ],
+               "OrgnlTxRef": {
+                  "IntrBkSttlmAmt": {
+                     "Amount": "1000.00",
+                     "Currency": "EUR"
+                  },
+                  "ReqdExctnDt": "2024-02-03",
+                  "Dbtr": {
+                     "Nm": "Debtor Name",
+                     "PstlAdr": {
+                        "AdrLine": [
+                           "Debtor Address Line 1",
+                           "Debtor Address Line 2"
+                        ]
+                     }
+                  },
+                  "DbtrAcct": {
+                     "Id": {
+                        "IBAN": "DE89 3704 0044 0532 0130 00"
+                     }
+                  },
+                  "Cdtr": {
+                     "Nm": "Creditor Name",
+                     "PstlAdr": {
+                        "AdrLine": [
+                           "Creditor Address Line 1",
+                           "Creditor Address Line 2"
+                        ]
+                     }
+                  },
+                  "CdtrAcct": {
+                     "Id": {
+                        "IBAN": "GB29 NWBK 6016 1331 9268 19"
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}

@@ -1,0 +1,58 @@
+{
+   "BusMsg": {
+      "AppHdr": {
+         "MsgDefIdr": "camt.056.001.06"
+      },
+      "Document": {
+         "PmtCxlReq": {
+            "Assgnmt": {
+               "Id": "#(messageId)",
+               "Assgnr": {
+                  "Agt": {
+                     "FinInstnId": {
+                        "BICFI": "CANCELRQSTBIC"
+                     }
+                  }
+               },
+               "Assgne": {
+                  "Agt": {
+                     "FinInstnId": {
+                        "BICFI": "RECEIVERBIC"
+                     }
+                  }
+               }
+            },
+            "Case": {
+               "Id": "CASE123456789",
+               "Cretr": {
+                  "Nm": "Requestor Name",
+                  "Id": {
+                     "OrgId": {
+                        "AnyBIC": "REQUESTORBIC"
+                     }
+                  }
+               },
+               "ReopCaseIndctn": false
+            },
+            "CtrlData": {
+               "TtlCxlReqd": true
+            },
+            "Undrlyg": {
+               "OrgnlGrpInf": {
+                  "OrgnlMsgId": "#(originalMsgId)",
+                  "OrgnlMsgNmId": "#(originalMsgDefId)"
+               },
+               "OrgnlPmtInfId": "#(originalTransactionId)",
+               "OrgnlInstrId": "#(originalInstructionId)",
+               "OrgnlEndToEndId": "#(originalEndToEndId)",
+               "OrgnlUETR": "UNIQUEENDTOENDTRANSACTIONREFERENCE",
+               "Rsn": {
+                  "Cd": "DUPL",
+                  "Prtry": "Duplicate Payment"
+               },
+               "InstrForNxtAgt": "Please cancel the above transaction due to duplication."
+            }
+         }
+      }
+   }
+}
