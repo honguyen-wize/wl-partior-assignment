@@ -8,6 +8,8 @@ Background:
   * def originalEndToEndId = karate.get('endToEndId')
   * def originalTransactionId = karate.get('txId')
   * header MsgId = karate.get('msgId')
+  * header NodeDownStatus = karate.get('caDownNode')
+  * header BIC = karate.get('caBIC')
 
 Scenario: DA sends pacs.002 ACSP - Server Down
     #8. CA sends REQUEST pacs.002 with ACSP to [Mock server] - Server Down
