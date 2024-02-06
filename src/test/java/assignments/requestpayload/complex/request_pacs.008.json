@@ -1,0 +1,93 @@
+{
+   "BusMsg": {
+      "AppHdr": {
+         "MsgDefIdr": "pacs.008.001.02"
+      },
+      "Document": {
+         "FIToFICstmrCdtTrf": {
+            "GrpHdr": {
+               "MsgId": "#(messageId)",
+               "CreDtTm": "2024-02-03T10:00:00Z",
+               "NbOfTxs": "1",
+               "CtrlSum": "#{amount}",
+               "InitgPty": {
+                  "Nm": "Debtor Name",
+                  "Id": "Debtor Identifier"
+               }
+            },
+            "CdtTrfTxInf":
+            {
+               "PmtId": {
+                  "InstrId": "#(instrId)",
+                  "EndToEndId": "#(endToEndId)",
+                  "TxId": "#(txId)"
+               },
+               "Amt": {
+                  "InstdAmt": {
+                     "Amount": "#(amount)",
+                     "Currency": "#(currency)"
+                  }
+               },
+               "ChrgBr": "DEBT",
+               "Dbtr": {
+                  "Nm": "Debtor Name",
+                  "PstlAdr": {
+                     "AdrLine": [
+                        "Debtor Address Line 1",
+                        "Debtor Address Line 2"
+                     ]
+                  },
+                  "Id": {
+                     "OrgId": {
+                        "Othr": {
+                           "Id": "Debtor Identifier"
+                        }
+                     }
+                  }
+               },
+               "DbtrAcct": {
+                  "Id": {
+                     "IBAN": "Debtor IBAN"
+                  }
+               },
+               "DbtrAgt": {
+                  "FinInstnId": {
+                     "BICFI": "Debtor BIC"
+                  }
+               },
+               "CdtrAgt": {
+                  "FinInstnId": {
+                     "BICFI": "Creditor BIC"
+                  }
+               },
+               "Cdtr": {
+                  "Nm": "Creditor Name",
+                  "PstlAdr": {
+                     "AdrLine": [
+                        "Creditor Address Line 1",
+                        "Creditor Address Line 2"
+                     ]
+                  },
+                  "Id": {
+                     "OrgId": {
+                        "Othr": {
+                           "Id": "Creditor Identifier"
+                        }
+                     }
+                  }
+               },
+               "CdtrAcct": {
+                  "Id": {
+                     "IBAN": "Creditor IBAN"
+                  }
+               },
+               "RmtInf": {
+                  "Ustrd": [
+                     "Payment for invoice 123456"
+                  ]
+               }
+            }
+         }
+      }
+   }
+}

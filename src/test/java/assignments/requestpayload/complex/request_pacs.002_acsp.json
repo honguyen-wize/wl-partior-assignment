@@ -1,0 +1,93 @@
+{
+   "BusMsg": {
+      "AppHdr": {
+         "MsgDefIdr": "pacs.002.001.01"
+      },
+      "Document": {
+         "FIToFIPmtStsRpt": {
+            "GrpHdr": {
+               "MsgId": "#(messageId)",
+               "CreDtTm": "2024-02-03T14:00:00Z",
+               "InstgAgt": {
+                  "FinInstnId": {
+                     "BICFI": "NWBKGB2L"
+                  }
+               },
+               "InstdAgt": {
+                  "FinInstnId": {
+                     "BICFI": "HSBCGB2L"
+                  }
+               }
+            },
+            "OrgnlGrpInfAndSts": {
+               "OrgnlMsgId": "#(originalMsgId)",
+               "OrgnlMsgNmId": "#(originalMsgDefId)",
+               "GrpSts": "ACSP",
+               "StsRsnInf": [
+                  {
+                     "Rsn": {
+                        "Cd": "ACSP",
+                        "Prtry": "Accepted, Settlement In Process"
+                     },
+                     "AddtlInf": [
+                        "The payment instruction is accepted and settlement is in process."
+                     ]
+                  }
+               ]
+            },
+            "TxInfAndSts": {
+               "StsId": "#(originalTransactionId)",
+               "OrgnlInstrId": "#(originalInstructionId)",
+               "OrgnlEndToEndId": "#(originalEndToEndId)",
+               "TxSts": "ACSP",
+               "StsRsnInf": [
+                  {
+                     "Rsn": {
+                        "Cd": "ACSP",
+                        "Prtry": "Accepted, Settlement In Process"
+                     },
+                     "AddtlInf": [
+                        "The transaction is accepted and settlement is in process."
+                     ]
+                  }
+               ],
+               "OrgnlTxRef": {
+                  "IntrBkSttlmAmt": {
+                     "Amount": "500.00",
+                     "Currency": "USD"
+                  },
+                  "ReqdExctnDt": "2024-02-03",
+                  "Dbtr": {
+                     "Nm": "John Doe",
+                     "PstlAdr": {
+                        "AdrLine": [
+                           "123 Main Street",
+                           "Anytown, AN 12345"
+                        ]
+                     }
+                  },
+                  "DbtrAcct": {
+                     "Id": {
+                        "IBAN": "GB33BUKB20201555555555"
+                     }
+                  },
+                  "Cdtr": {
+                     "Nm": "Jane Doe",
+                     "PstlAdr": {
+                        "AdrLine": [
+                           "456 Secondary Street",
+                           "Othertown, OT 67890"
+                        ]
+                     }
+                  },
+                  "CdtrAcct": {
+                     "Id": {
+                        "IBAN": "GB94BARC20201530093459"
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}

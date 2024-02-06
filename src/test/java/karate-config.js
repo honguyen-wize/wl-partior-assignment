@@ -6,7 +6,8 @@ function fn() {
   }
   var config = {
     env: env,
-    myVarName: 'someValue'
+    myVarName: 'someValue',
+    complexBaseUrl: 'https://api.dev.runner.wizerace.net/mockApi/complex/'
   }
   if (env == 'dev') {
     // customize

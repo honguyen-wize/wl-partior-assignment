@@ -1,45 +1,26 @@
-Feature: sample karate test script
-for help, see: https://github.com/karatelabs/karate/wiki/IDE-Support
+Feature: Payment Cancelling Request Workflow
 
-Background:
-  * url 'https://jsonplaceholder.typicode.com'
+Scenario Outline: Payment Cancelling Request
 
-Scenario: get all users and then get the first user by id - complex
-  Given path 'users'
-  When method get
-  Then status 200
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-SendCreditInstruction-Admi007Resp.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-Receive-Pacs008.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-SendPacs.002-ACFC.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-IA-SendPacs.002-ACSP-ServerDown.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-CA-SendPacs.002-ACSP-ServerDown.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-SendCamt.056-ServerDown.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-Receive-Admi004-QRTY.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-Receive-Admi004-RESM-Camt056.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-Receive-Admi007-ACTC.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-CA-Receive-Camt056.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-IA-Receive-Camt056.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-CA-Receive-Admi004-RESM-Pacs002.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-IA-Receive-Admi004-RESM-Pacs002.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-Receive-Pacs002-ACSP.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-Receive-Camt029-CNCL.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-DA-Receive-Pacs002-CANC.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-CA-Receive-Pacs002-CANC.feature')
+  * karate.call('classpath:assignments/assignmentcomplex/assignment-IA-Receive-Pacs002-CANC.feature')
 
-  * def first = response[0]
-
-  Given path 'users', first.id
-  When method get
-  Then status 200
-
-Scenario: create a user and then get it by id
-  * def user =
-    """
-    {
-      "name": "Test User",
-      "username": "testuser",
-      "email": "test@user.com",
-      "address": {
-        "street": "Has No Name",
-        "suite": "Apt. 123",
-        "city": "Electri",
-        "zipcode": "54321-6789"
-      }
-    }
-    """
-
-  Given url 'https://jsonplaceholder.typicode.com/users'
-  And request user
-  When method post
-  Then status 201
-
-  * def id = response.id
-  * print 'created id is: ', id
-
-  Given path id
-  # When method get
-  # Then status 200
-  # And match response contains user
+  Examples:
+    |testcasId    |msgId   	          |instrId 	             |endToEndId 	          |txId                 |currency	|amount  |daMsgPacs002Id|caMsgPacs002Id|iaMsgPacs002Id|daMsgCamt056Id|
+    |3.1.1 		  |Pacs00820240251530 |InstrId202402051636 	 |EndToEndId202402051636  |TxId202402051636 	|USD 		|100     |DAPacs00200820240251530|CAPacs00200820240251530 |IAPacs00200820240251530      |DACamt05600820240251530|
