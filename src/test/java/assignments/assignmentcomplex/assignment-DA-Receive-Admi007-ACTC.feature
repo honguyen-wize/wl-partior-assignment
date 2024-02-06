@@ -2,11 +2,6 @@ Feature: Participant Bank deposits from their off-chain account to their On-chai
 
 Background:
   * url complexBaseUrl
-  * def originalMsgId = karate.get('msgId')
-  * def originalMsgDefId = 'pacs.008.001.02'
-  * def originalInstructionId = karate.get('instrId')
-  * def originalEndToEndId = karate.get('endToEndId')
-  * def originalTransactionId = karate.get('txId')
   * def requestJson = read('classpath:assignments/requestpayload/complex/request_camt.056.json')
   * header MsgId = karate.get('msgId')
 

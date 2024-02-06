@@ -9,6 +9,8 @@ Background:
   * def originalTransactionId = karate.get('txId')
   * def requestPacs002Json = read('classpath:assignments/requestpayload/complex/request_pacs.002_acsp.json')
   * header MsgId = karate.get('msgId')
+  * header NodeDownStatus = karate.get('iaDownNode')
+  * header BIC = karate.get('iaBIC')
 
 Scenario: DA sends pacs.002 ACSP - Server Down
 

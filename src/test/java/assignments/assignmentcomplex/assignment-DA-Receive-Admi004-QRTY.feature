@@ -2,11 +2,10 @@ Feature: Participant Bank deposits from their off-chain account to their On-chai
 
 Background:
   * url complexBaseUrl
-  * def originalMsgId = karate.get('msgId')
-  * def originalMsgDefId = 'pacs.008.001.02'
-  * def originalInstructionId = karate.get('instrId')
-  * def originalEndToEndId = karate.get('endToEndId')
-  * def originalTransactionId = karate.get('txId')
+  * def NodeServerUtils = Java.type('com.wizeline.assigments.utils.NodeServerUtils')
+  * def daNodeBIC = NodeServerUtils.getNodeStatus(karate.get('daNode.bic'), karate.get('daNode.status'))
+  * def caNodeBIC = NodeServerUtils.getNodeStatus(karate.get('caNode.bic'), karate.get('caNode.status'))
+  * def iaNodeBIC = NodeServerUtils.getNodeStatus(karate.get('iaNode.bic'), karate.get('iaNode.status'))
   * header MsgId = karate.get('msgId')
 
 Scenario: DA receive admin004 QRTY for camt.056
@@ -21,10 +20,13 @@ Scenario: DA receive admin004 QRTY for camt.056
     * def eventsResponse = response.BusMsg.Document.AdminRspn.RspnSts.AddtlInf
     * match eventsResponse[0] == 'eventCode = QRTY'
     * match eventsResponse[1] == 'eventDescription = New Pym or Trx is queued for retry'
-    * match eventsResponse[7] == 'eventParam6 = Pacs00820240251530'
+    * match eventsResponse[2] == 'eventParam1 = ' + daNodeBIC
+    * match eventsResponse[3] == 'eventParam2 = ' + caNodeBIC
+    * match eventsResponse[4] == 'eventParam3 = ' + iaNodeBIC
+    * match eventsResponse[7] == 'eventParam6 = ' + originalMsgId
     * match eventsResponse[13] == 'eventParam12 = ACSP'
-    * match eventsResponse[14] == 'eventParam13 = InstrId202402051636'
-    * match eventsResponse[15] == 'eventParam14 = TxId202402051636'
-    * match eventsResponse[16] == 'eventParam15 = EndToEndId202402051636'
+    * match eventsResponse[14] == 'eventParam13 = ' + originalInstructionId
+    * match eventsResponse[15] == 'eventParam14 = ' + originalTransactionId
+    * match eventsResponse[16] == 'eventParam15 = ' + originalEndToEndId
 
 

@@ -9,6 +9,8 @@ Background:
   * def originalEndToEndId = karate.get('endToEndId')
   * def originalTransactionId = karate.get('txId')
   * header MsgId = karate.get('msgId')
+  * header NodeDownStatus = karate.get('daDownNode')
+  * header BIC = karate.get('daBIC')
   * def requestJson = read('classpath:assignments/requestpayload/complex/request_camt.056.json')
 
 Scenario: DA sends camt.056 - Server Down
