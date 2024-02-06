@@ -49,7 +49,7 @@ Scenario: Participant Bank successfully deposits from their off-chain account to
     * def currentDateTime = getCurrentUTCDate()
     * def generatedDateTime = currentDateTime
     * def settlementDate = currentDateTime
-    * def currentDatePart = getDatePart(currentDateTime)
+    * def currentDate = getDatePart(currentDateTime)
 
     Given path 'sendToSettlementBank'
     And request read('classpath:assignments/requestpayload/request_camt.050.001.05.json')
@@ -57,31 +57,69 @@ Scenario: Participant Bank successfully deposits from their off-chain account to
     Then status 200
 
     # Karate validates the RESPONSE of camp.050
-    * def actualCreditDebit = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].CdtDbtInd
-    * def actualBookingDate = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].BookgDt
-    * def actualValueDate = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].ValueDt
-    * def actualExposureDate = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].ExposureDt
-    * def actualSettlementDate = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].StlmntDt
-    * def actualExecutionStatus = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].ExecStatus
-    * def actualPostingRefNum = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0].PostingRefNum
-   
-    * def actualBookingDatePart = getDatePart(actualBookingDate)
-    * def actualValueDatePart = getDatePart(actualValueDate)
-    * def actualExposureDatePart = getDatePart(actualExposureDate)
-    * def actualSettlementDatePart = getDatePart(actualSettlementDate)
+    * def postingEntry = response.BusMsg.Document.LqdtyCdtTrf.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0]
+    * def actualCreditDebit = postingEntry.CdtDbtInd
+    * def actualBookingDate = getDatePart(postingEntry.BookgDt)
+    * def actualValueDate = getDatePart(postingEntry.ValueDt)
+    * def actualExposureDate = getDatePart(postingEntry.ExposureDt)
+    * def actualSettlementDate = getDatePart(postingEntry.StlmntDt)
+    * def actualExecutionStatus = postingEntry.ExecStatus
+    * def actualPostingRefNum = postingEntry.PostingRefNum
 
     * match actualCreditDebit == 'CREDIT' || actualCreditDebit == 'DEBIT'
-    * match actualBookingDatePart == currentDatePart
-    * match actualValueDatePart == currentDatePart
-    * match actualExposureDatePart == currentDatePart
-    * match actualSettlementDatePart == currentDatePart
+    * match actualBookingDate == currentDate
+    * match actualValueDate == currentDate
+    * match actualExposureDate == currentDate
+    * match actualSettlementDate == currentDate
     * match actualExecutionStatus == 'GENERATED'
     * match actualPostingRefNum !=  ''
 
     #Step 3.1 Karate sends REQUEST camt.025 with ACSC  to [Mock Server Settlement Bank Node]
+    * def currentDateTime = getCurrentUTCDate()
+    * def generatedDateTime = currentDateTime
+    * def settlementDate = currentDateTime
+    * def currentDate = getDatePart(currentDateTime)
     * def statusCode = 'ACSC'
-    * def statusDescription = "AcceptedSettlementCompletedDebitorAccount"
+    * def statusDescription = 'AcceptedSettlementCompletedDebitorAccount'
+
     Given path 'sendToSettlementBankNode'
     And request read('classpath:assignments/requestpayload/request_camt.025.001.05.json')
     When method post
     Then status 200
+
+   # Step 3.2.1 Karate validates the response json
+    * def postingEntry = response.BusMsg.Document.Rct.SplmtryData.Envlp.Document.PostingSuplDataV01.PostingEntry[0]
+    * def actualCreditDebit = postingEntry.CdtDbtInd
+    * def actualBookingDate = getDatePart(postingEntry.BookgDt)
+    * def actualValueDate = getDatePart(postingEntry.ValueDt)
+    * def actualExposureDate = getDatePart(postingEntry.ExposureDt)
+    * def actualSettlementDate = getDatePart(postingEntry.StlmntDt)
+    * def actualExecutionStatus = postingEntry.ExecStatus
+    * def actualPostingRefNum = postingEntry.PostingRefNum
+
+   * match actualCreditDebit == 'CREDIT' || actualCreditDebit == 'DEBIT'
+   * match actualBookingDate == currentDate
+   * match actualValueDate == currentDate
+   * match actualExposureDate == currentDate
+   * match actualSettlementDate == currentDate
+   * match actualExecutionStatus == 'SETTLED'
+   * match actualPostingRefNum !=  ''
+
+    #4.1 Karate sends a REQUEST  camt.025 to [Mock Server Participant Bank Node]
+    * def currentDateTime = getCurrentUTCDate()
+    * def generatedDateTime = currentDateTime
+    * def settlementDate = currentDateTime
+    * def statusCode = 'ACCC'
+    
+    Given path 'notifyToParticipantBank'
+    And request read('classpath:assignments/requestpayload/request_camt.025.001.05.json')
+    When method post
+    Then status 200
+
+    * def actualStatusCode = response.BusMsg.Document.Rct.RctDtls.ReqHdlg.StsCd
+    * def actualDescription = response.BusMsg.Document.Rct.RctDtls.ReqHdlg.Desc
+    * def hasSplmtryData = response.BusMsg.Document.Rct.SplmtryData
+
+    * match actualStatusCode == 'ACCC'
+    * match actualDescription == 'AcceptedSettlementCompletedCreditorAccount'
+    * assert hasSplmtryData == null
