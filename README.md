@@ -11,16 +11,22 @@ This project contains solutions for both the simple and complex assignments usin
 
 2. **Run Tests:**
 
+   - Run the two assignments:
+
+     ```bash
+     mvn clean test 
+     ```
+
    - Run the simple assignment:
 
      ```bash
-     mvn test -Dtest=AssignmentSimpleRunner
+     mvn clean test -Dtest=AssignmentSimpleRunner
      ```
 
    - Run the complex assignment:
 
      ```bash
-     mvn test -Dtest=AssignmentComplexRunner
+     mvn clean test -Dtest=AssignmentComplexRunner
      ```
 
 ## Report
